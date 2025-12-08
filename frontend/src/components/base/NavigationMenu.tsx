@@ -121,5 +121,3 @@ export {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 }
-
-export { navigationMenuTriggerStyle } from "./navigationMenuStyles"

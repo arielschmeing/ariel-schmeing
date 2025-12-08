@@ -12,9 +12,10 @@ const mockBcrypt = {
 };
 
 jest.mock('bcryptjs', () => ({
-  ...jest.requireActual('bcryptjs'),
-  hash: (...args: unknown[]) => mockBcrypt.hash(...args) as Promise<string>,
-  compare: (...args: unknown[]) => mockBcrypt.compare(...args) as Promise<boolean>,
+  hash: (password: string, salt: number): Promise<string> =>
+    mockBcrypt.hash(password, salt) as Promise<string>,
+  compare: (data: string, encrypted: string): Promise<boolean> =>
+    mockBcrypt.compare(data, encrypted) as Promise<boolean>,
 }));
 
 describe('UsersService', () => {
