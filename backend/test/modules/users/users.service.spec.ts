@@ -13,8 +13,8 @@ const mockBcrypt = {
 
 jest.mock('bcryptjs', () => ({
   ...jest.requireActual('bcryptjs'),
-  hash: (...args: unknown[]) => mockBcrypt.hash(...args),
-  compare: (...args: unknown[]) => mockBcrypt.compare(...args),
+  hash: (...args: unknown[]) => mockBcrypt.hash(...args) as Promise<string>,
+  compare: (...args: unknown[]) => mockBcrypt.compare(...args) as Promise<boolean>,
 }));
 
 describe('UsersService', () => {
@@ -46,10 +46,15 @@ describe('UsersService', () => {
   };
 
   beforeEach(async () => {
-    const mockUserModel = jest.fn().mockImplementation((data) => ({
+    const mockUserModel = jest.fn().mockImplementation((data: Partial<User>) => ({
       ...data,
       save: jest.fn().mockResolvedValue(data),
     })) as unknown as typeof User;
+
+    // Configure findOne to return null by default (no existing user)
+    mockFindOne.mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
 
     Object.assign(mockUserModel, {
       find: mockFind,

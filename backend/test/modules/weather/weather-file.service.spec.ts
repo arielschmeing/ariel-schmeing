@@ -82,7 +82,7 @@ describe('WeatherFileService', () => {
       expect(mockSend).toHaveBeenCalled();
     });
 
-    it('should handle empty data array', () => {
+    it('should throw InternalServerErrorException for empty data array', () => {
       const mockSetHeader = jest.fn();
       const mockSend = jest.fn();
       const mockRes = {
@@ -90,9 +90,9 @@ describe('WeatherFileService', () => {
         send: mockSend,
       } as unknown as Response;
 
-      weatherFileService.defaultExport('csv', mockRes, []);
-
-      expect(mockSend).toHaveBeenCalled();
+      expect(() => {
+        weatherFileService.defaultExport('csv', mockRes, []);
+      }).toThrow('No data to export');
     });
   });
 

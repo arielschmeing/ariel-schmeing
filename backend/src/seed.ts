@@ -34,4 +34,4 @@ async function bootstrap() {
     await appContext.close();
   }
 }
-bootstrap();
+void bootstrap();

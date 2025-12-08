@@ -28,7 +28,7 @@ describe('WeatherService', () => {
   };
 
   beforeEach(async () => {
-    const mockWeatherModel = jest.fn().mockImplementation((data) => ({
+    const mockWeatherModel = jest.fn().mockImplementation((data: Weather) => ({
       ...data,
       save: jest.fn().mockResolvedValue(data),
     })) as unknown as typeof Weather;

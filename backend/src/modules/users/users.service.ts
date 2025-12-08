@@ -82,7 +82,7 @@ export class UsersService {
       return this.userMapper.toResponse(this.validationUser(user));
     } catch (error) {
       if (error instanceof ForbiddenUserException) throw error;
-      if (error.name === 'CastError') {
+      if (error instanceof Error && error.name === 'CastError') {
         throw new ResourceNotFoundException('User', id);
       }
       this.logger.error(`Error fetching user by ID: ${id}`, error);

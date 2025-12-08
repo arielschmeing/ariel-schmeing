@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { UsersService } from 'src/modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { BadRequestException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 
 jest.mock('bcryptjs');
@@ -72,7 +72,7 @@ describe('AuthService', () => {
       expect(result).toEqual({ access_token: expectedToken });
     });
 
-    it('should throw BadRequestException when password is incorrect', async () => {
+    it('should throw UnauthorizedException when password is incorrect', async () => {
       const loginRequest = {
         email: 'test@example.com',
         password: 'wrongPassword',
@@ -82,7 +82,7 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(authService.login(loginRequest)).rejects.toThrow(
-        BadRequestException,
+        UnauthorizedException,
       );
       expect(mockFindByEmail).toHaveBeenCalledWith(loginRequest.email);
       expect(bcrypt.compare).toHaveBeenCalledWith(
@@ -92,7 +92,7 @@ describe('AuthService', () => {
       expect(mockSign).not.toHaveBeenCalled();
     });
 
-    it('should propagate error when user is not found', async () => {
+    it('should throw UnauthorizedException when user is not found', async () => {
       const loginRequest = {
         email: 'nonexistent@example.com',
         password: 'password123',
@@ -101,7 +101,7 @@ describe('AuthService', () => {
       mockFindByEmail.mockRejectedValue(new Error('User not found'));
 
       await expect(authService.login(loginRequest)).rejects.toThrow(
-        'User not found',
+        UnauthorizedException,
       );
       expect(mockSign).not.toHaveBeenCalled();
     });

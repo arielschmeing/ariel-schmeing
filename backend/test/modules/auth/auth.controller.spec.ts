@@ -5,7 +5,6 @@ import { LoginRequest } from 'src/modules/auth/dto/login.request';
 
 describe('AuthController', () => {
   let authController: AuthController;
-  let authService: jest.Mocked<AuthService>;
 
   const mockLogin = jest.fn();
 
@@ -20,7 +19,6 @@ describe('AuthController', () => {
     }).compile();
 
     authController = module.get<AuthController>(AuthController);
-    authService = module.get(AuthService);
   });
 
   afterEach(() => {
